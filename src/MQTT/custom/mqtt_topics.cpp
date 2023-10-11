@@ -8,18 +8,16 @@ Dictionary<String, String> publishedTopics = Dictionary<String, String>();
 
 // Compile the dictionary of subscribed topics (to be customized)
 void compileSubTopics(Dictionary<String, String> &subTopics) {
-  // Yellow LED control subscribed topic  
-  subTopics.set("yellowOnOffTopic", thisClient "/yellowTopic");
-  // Red LED control subscribed topic
-  subTopics.set("redOnOffTopic", thisClient "/redTopic");
-  // Blue LED control subscribed topic
-  subTopics.set("blueOnOffTopic", thisClient "/blueTopic");
-  // Subscribed topic for printing messages
-  subTopics.set("inputTopic", thisClient "/input");
+  // Logo LED control subscribed topic  
+  subTopics.set("LogoOnOffTopic", thisClient "/LogoTopic");
 }
 
 // Compile the dictionary of published topics (to be customized)
 void compilePubTopics(Dictionary<String, String> &pubTopics) {
   // Message Publishing Topic
-  pubTopics.set("outTopic", thisClient "/output");
+  pubTopics.set("Battery", thisClient "/Battery");  
+  pubTopics.set("Motor1", thisClient "/Motor1");
+  pubTopics.set("Motor2", thisClient "/Motor2");
+  pubTopics.set("Motor3", thisClient "/Motor3");
+  pubTopics.set("Motor4", thisClient "/Motor4");  
 }

@@ -19,26 +19,11 @@ void parseMessage(char *topic, char *payload, AsyncMqttClientMessageProperties p
     // to be customized
 
     // Yellow LED control
-    // a message has arrived from yellowOnOffTopic
-    if (strcmp(topic, subscribedTopics.get("yellowOnOffTopic").c_str()) == 0)
+    // a message has arrived from LogoOnOffTopic
+    if (strcmp(topic, subscribedTopics.get("LogoOnOffTopic").c_str()) == 0)
     {
         // Control on/off yellow LED from payload
-        driveOnOffYellow(data);
+        driveOnOffLogo(data);
     }
-
-    // Red LED control
-    // a message has arrived from redOnOffTopic
-    else if (strcmp(topic, subscribedTopics.get("redOnOffTopic").c_str()) == 0) 
-    {
-        // Control on/off red LED from payload
-        driveOnOffRed(data);
-    }
-
-    // Blue LED control
-    // a message has arrived from blueOnOffTopic
-    else if (strcmp(topic, subscribedTopics.get("blueOnOffTopic").c_str()) == 0) 
-    {
-        // Control on/off blue LED from payload
-        driveOnOffBlue(data);
-    }    
+   
 }

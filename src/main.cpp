@@ -265,31 +265,24 @@ In the `setup()` function it is important to respect the sequence of operations:
 #include <MQTT/custom/custom.h>
 
 // Other libraries required by the specific application
-#include <Bounce2.h>
+#include <APPLICATION/application.h>
 
 // your MQTT Broker:
 // uncomment one of following #include to set the MQTT broker.
-#include <MQTT/broker/shiftr_io.h>
+//#include <MQTT/broker/shiftr_io.h>
 // #include <MQTT/broker/raspi4.h>
-// #include <MQTT/broker/mosquitto.h>
+#include <MQTT/broker/mosquitto.h>
 
-// simple digital input
-Bounce button = Bounce();
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("WiFi Example 05: connection to an MQTT broker, control of three LEDs and monitoring of a button");
+  Serial.println("Smart Transport Telemetry over MQTT: monitoring of battery level and motors current");
 
   // configures three test LEDs controlled via MQTT messages
   // interpreting messages and executing commands is carried out 
   // in the file MQTT/custom/parseMessage.cpp  (to be customized)
-  pinMode(pinYellow, OUTPUT);
-  pinMode(pinRed, OUTPUT);
-  pinMode(pinBlue, OUTPUT);
-
-  // Configure a digital input as a button managed by Bounce2.h
-  button.attach(pinButton, INPUT_PULLUP);
+  pinMode(pinLogo, OUTPUT);
 
   // uses the macAddress() method of the WiFi object
   Serial.println();
@@ -308,31 +301,29 @@ void setup()
 
 void loop()
 {
-  // Update the Bounce instance (YOU MUST DO THIS EVERY LOOP)
-  button.update();
+  // if the client is connected with the MQTT broker, do data sampling and publish telemetry
+  if(mqttClient.connected()) {
+    batteryLevel = getBatteryVoltage();
+    getMotorsCurrent(motorCurrents);
 
-  if (button.fell())
-  {
-    const char msgButton[] = "Button pressed";
-    Serial.println(msgButton);
+    char s[20];
+    sprintf(s, "%.3f", batteryLevel);
+    uint16_t res = 0;
+    res = mqttClient.publish(publishedTopics.get("Battery").c_str(),0,false, s, strlen(s),false, 0);
 
-    // publish on topic outTopic
-    if(mqttClient.connected()) {
-      
-      uint16_t res = 0;
-      res = mqttClient.publish(publishedTopics.get("outTopic").c_str(),0,false, msgButton, strlen(msgButton),false, 0);
-    }
-  } else if (button.rose())
-  {
-    const char msgButton[] = "Button released";
-    Serial.println(msgButton);
+    sprintf(s, "%.3f", motorCurrents.Im1);
+    res = mqttClient.publish(publishedTopics.get("Motor1").c_str(),0,false, s, strlen(s),false, 0);
 
-    // publish on topic outTopic
-    if(mqttClient.connected()) {
-      
-      uint16_t res = 0;
-      res = mqttClient.publish(publishedTopics.get("outTopic").c_str(),0,false, msgButton, strlen(msgButton),false, 0);
-    }
+    sprintf(s, "%.3f", motorCurrents.Im2);
+    res = mqttClient.publish(publishedTopics.get("Motor2").c_str(),0,false, s, strlen(s),false, 0);
+
+    sprintf(s, "%.3f", motorCurrents.Im3);
+    res = mqttClient.publish(publishedTopics.get("Motor3").c_str(),0,false, s, strlen(s),false, 0);
+
+    sprintf(s, "%.3f", motorCurrents.Im4);
+    res = mqttClient.publish(publishedTopics.get("Motor4").c_str(),0,false, s, strlen(s),false, 0);
+
+    delay(updatePeriod);
   }
 
   vTaskDelay(pdMS_TO_TICKS(100));

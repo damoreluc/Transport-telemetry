@@ -1,4 +1,4 @@
-# WiFi Example 05: MQTT client template with WiFi network connection
+# Transport Telemetry: MQTT client with WiFi network connection
 
 The project is a basic model for building an MQTT client. It should be considered as a reference for more complex projects based on the MQTT protocol on ESP32.
 
@@ -6,18 +6,19 @@ It uses the library `AsyncMqttClient` (link: https://github.com/OttoWinter/async
 
 (see also https://github.com/khoih-prog/AsyncMQTT_ESP32 with more complete documentation)
 
-The sample accepts four subscribed topics:
+The sample accepts one subscribed topics:
 
-* `ESP32_base/yellowTopic`  to turn on/off a yellow led
-* `ESP32_base/redTopic`  to turn on/off a red led
-* `ESP32_base/blueTopic`  to turn on/off a blue led 
-* `ESP32_base/input`    to print a text message on the serial console
+* `ESP32_base/logoTopic`  to turn on/off the logo led
 
-and publish on the topic:
+and publish on the topics:
 
-* `ESP32_base/output`
+* `Rover/Battery`
+* `Rover/Motor1`
+* `Rover/Motor2`
+* `Rover/Motor3`
+* `Rover/Motor4`
 
-a message that represents the current state of a button.
+messages that represents the battery level (in Volt) and the current absorbed by each motor (in Ampere).
 
 ---
 
